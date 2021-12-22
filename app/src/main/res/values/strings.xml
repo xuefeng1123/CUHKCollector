@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">CUHKCollector</string>
     <string name="title_activity_maps">MapsActivity</string>
-    <string name="maps_api_key">AIzaSyDObYwzeQ0mZ56MNYsdiazlGJwdzWIeOfQ</string>
+    <string name="maps_api_key">AIzaSyAKsDZHHfb5yvXV1fbPAk4Pc4Sv6kyHMmg</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_event_map">EventMap</string>
     <string name="title_discover">Discover</string>
     <string name="title_notifications">Notifications</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

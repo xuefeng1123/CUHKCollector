@@ -12,7 +12,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private ActivityMainBinding binding;
 
