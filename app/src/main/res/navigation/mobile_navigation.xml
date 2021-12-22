@@ -9,7 +9,11 @@
         android:id="@+id/navigation_event_map"
         android:name="hk.edu.cuhk.ie.iems5722.cuhkcollector.ui.eventMap.EventMapFragment"
         android:label="@string/title_event_map"
-        tools:layout="@layout/fragment_event_map" />
+        tools:layout="@layout/fragment_event_map" >
+        <action
+            android:id="@+id/action_navigation_event_map_to_eventDetailFragment"
+            app:destination="@id/eventDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_discover"
@@ -22,4 +26,13 @@
         android:name="hk.edu.cuhk.ie.iems5722.cuhkcollector.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/eventDetailFragment"
+        android:name="hk.edu.cuhk.ie.iems5722.cuhkcollector.EventDetailFragment"
+        android:label="fragment_event_detail"
+        tools:layout="@layout/fragment_event_detail" >
+        <action
+            android:id="@+id/action_eventDetailFragment_to_navigation_event_map2"
+            app:destination="@id/navigation_event_map" />
+    </fragment>
 </navigation>

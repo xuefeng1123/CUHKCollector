@@ -7,12 +7,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.NavHost;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -39,17 +45,18 @@ import java.util.Objects;
 import java.util.concurrent.Executor;
 
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.Entity.MyMarker;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.EventDetailFragment;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.MainActivity;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.MapsActivity;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.R;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.databinding.FragmentEventMapBinding;
 
-public class EventMapFragment extends Fragment implements OnMapReadyCallback {
+public class EventMapFragment extends Fragment implements OnMapReadyCallback{
 
     private EventMapViewModel eventMapViewModel;
     private FragmentEventMapBinding binding;
 
-
+    private NavController navController;
     private GoogleMap mMap;
     private MapView mMapView;
     // The entry point to the Places API.
@@ -67,7 +74,13 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback {
         binding = FragmentEventMapBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        // 检索NavController
+//        navController = Navigation.findNavController(getView());
 
+        NavHostFragment navHostFragment =
+                (NavHostFragment) EventMapFragment.this.getActivity().getSupportFragmentManager()
+                        .findFragmentById(R.id.nav_host_fragment_activity_main);
+        navController = navHostFragment.getNavController();
 
         markers = new ArrayList<>();
         mMapView = binding.eventMap.findViewById(R.id.event_map);
@@ -141,6 +154,22 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback {
         this.mMap = mMap;
         updateLocationUI();
         getDeviceLocation();
+        this.mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(@NonNull Marker marker) {
+                Bundle bundle = new Bundle();
+                bundle.putString("eventId", marker.getId());
+                navController.navigate(R.id.eventDetailFragment, bundle);
+            }
+        });
+//        this.mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//            @Override
+//            public boolean onMarkerClick(@NonNull Marker marker) {
+//
+//                navController.navigate(R.id.eventDetailFragment);
+//                return false;
+//            }
+//        });
     }
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
