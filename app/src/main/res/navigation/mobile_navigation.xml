@@ -33,6 +33,7 @@
         tools:layout="@layout/fragment_event_detail" >
         <action
             android:id="@+id/action_eventDetailFragment_to_navigation_event_map2"
-            app:destination="@id/navigation_event_map" />
+            app:destination="@id/navigation_event_map"
+            app:popUpTo="@id/navigation_event_map" />
     </fragment>
 </navigation>

@@ -2,11 +2,15 @@ package hk.edu.cuhk.ie.iems5722.cuhkcollector;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.Objects;
 
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.databinding.FragmentEventDetailBinding;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.databinding.FragmentEventMapBinding;
@@ -53,7 +57,22 @@ public class EventDetailFragment extends Fragment {
             eventId = getArguments().getString(ARG_PARAM1);
         }
     }
+    @Override
+    public void onStart() {
+        setHasOptionsMenu(true);
+        super.onStart();
+        ActionBar actionBar = ((MainActivity)getActivity()).getSupportActionBar();
+        actionBar.setTitle(eventId);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            requireActivity().getSupportFragmentManager().popBackStack();
+            return false;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

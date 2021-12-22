@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -111,6 +112,13 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback{
         return root;
     }
 
+    @Override
+    public void onStart() {
+        setHasOptionsMenu(true);
+        super.onStart();
+        ActionBar actionBar = ((MainActivity)getActivity()).getSupportActionBar();
+        actionBar.setTitle(getString(R.string.title_event_map));
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
