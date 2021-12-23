@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="hk.edu.cuhk.ie.iems5722.cuhkcollector">
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -15,6 +16,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CUHKCollector">
+        <service
+            android:name=".Service.CloudAnchorService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

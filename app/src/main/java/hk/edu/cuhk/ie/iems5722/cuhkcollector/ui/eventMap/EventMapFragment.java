@@ -1,6 +1,9 @@
 package hk.edu.cuhk.ie.iems5722.cuhkcollector.ui.eventMap;
 
+import static hk.edu.cuhk.ie.iems5722.cuhkcollector.Service.CloudAnchorService.TEST_ACTION;
+
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -39,18 +42,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.Executor;
 
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.Entity.MyMarker;
-import hk.edu.cuhk.ie.iems5722.cuhkcollector.EventDetailFragment;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.MainActivity;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.MapsActivity;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.R;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.Service.CloudAnchorService;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.databinding.FragmentEventMapBinding;
 
 public class EventMapFragment extends Fragment implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -66,7 +66,9 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Ac
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-    public List<Marker> markers;
+    static public List<Marker> markers;
+
+    static public Location lastKnownLocation;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -81,7 +83,12 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Ac
                         .findFragmentById(R.id.nav_host_fragment_activity_main);
         navController = navHostFragment.getNavController();
 
+        //初始化两个静态变量
         markers = new ArrayList<>();
+        lastKnownLocation = new Location("curr");
+        lastKnownLocation.setLatitude(defaultLocation.latitude);
+        lastKnownLocation.setLongitude(defaultLocation.longitude);
+
         mMapView = binding.eventMap.findViewById(R.id.event_map);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();// needed to get the map to display immediately
@@ -186,6 +193,8 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Ac
             }
         });
 
+        //启动定时服务,检测与事件锚点的距离
+        getActivity().startService(new Intent(getContext(), CloudAnchorService.class));
     }
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -227,11 +236,7 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Ac
         updateLocationUI();
     }
 
-    private Location lastKnownLocation;
     private void updateLocationUI() {
-        lastKnownLocation = new Location("curr");
-        lastKnownLocation.setLatitude(defaultLocation.latitude);
-        lastKnownLocation.setLongitude(defaultLocation.longitude);
 
         if (mMap == null) {
             return;
