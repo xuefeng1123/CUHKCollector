@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel;
 
 public class DiscoverViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+//    private MutableLiveData<String> mText;
 
     public DiscoverViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is discover fragment");
+//        mText = new MutableLiveData<>();
+//        mText.setValue("This is discover fragment");
     }
 
-    public LiveData<String> getText() {
-        return mText;
-    }
+//    public LiveData<String> getText() {
+//        return mText;
+//    }
 }
