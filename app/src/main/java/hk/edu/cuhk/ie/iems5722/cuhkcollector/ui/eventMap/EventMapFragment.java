@@ -1,5 +1,6 @@
 package hk.edu.cuhk.ie.iems5722.cuhkcollector.ui.eventMap;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -52,7 +53,7 @@ import hk.edu.cuhk.ie.iems5722.cuhkcollector.MapsActivity;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.R;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.databinding.FragmentEventMapBinding;
 
-public class EventMapFragment extends Fragment implements OnMapReadyCallback{
+public class EventMapFragment extends Fragment implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private EventMapViewModel eventMapViewModel;
     private FragmentEventMapBinding binding;
@@ -74,9 +75,6 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback{
 
         binding = FragmentEventMapBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        // 检索NavController
-//        navController = Navigation.findNavController(getView());
 
         NavHostFragment navHostFragment =
                 (NavHostFragment) EventMapFragment.this.getActivity().getSupportFragmentManager()
@@ -116,9 +114,10 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback{
     public void onStart() {
         setHasOptionsMenu(true);
         super.onStart();
-        ActionBar actionBar = ((MainActivity)getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle(getString(R.string.title_event_map));
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -126,10 +125,10 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback{
     }
 
 
-    private void showAllMarker(){
-        MyMarker m1 = new MyMarker(22.4135636,114.2092091,20, "大学站", "地铁站");
-        MyMarker m2 = new MyMarker(22.4180471,114.206987,140, "何善衡工程学大楼","教学楼");
-        MyMarker m3 = new MyMarker(22.4231945,114.2007411,300, "逸夫书院", "教学楼，住宿区");
+    private void showAllMarker() {
+        MyMarker m1 = new MyMarker(22.4135636, 114.2092091, 20, "大学站", "地铁站");
+        MyMarker m2 = new MyMarker(22.4180471, 114.206987, 140, "何善衡工程学大楼", "教学楼");
+        MyMarker m3 = new MyMarker(22.4231945, 114.2007411, 300, "逸夫书院", "教学楼，住宿区");
 
         List<MyMarker> myMarkers = new ArrayList<>();
         myMarkers.add(m1);
@@ -161,6 +160,7 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback{
     public void onMapReady(GoogleMap mMap) {
         this.mMap = mMap;
         updateLocationUI();
+
         getDeviceLocation();
         this.mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -170,14 +170,22 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback{
                 navController.navigate(R.id.eventDetailFragment, bundle);
             }
         });
-//        this.mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-//            @Override
-//            public boolean onMarkerClick(@NonNull Marker marker) {
-//
-//                navController.navigate(R.id.eventDetailFragment);
-//                return false;
-//            }
-//        });
+
+        this.mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
+            @Override
+            public void onMyLocationClick(@NonNull Location location) {
+                Toast.makeText(EventMapFragment.this.getActivity(), "Current location:\n" + location, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        this.mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                Toast.makeText(EventMapFragment.this.getActivity(), "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
     }
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -192,6 +200,8 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback{
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true;
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
         } else {
             ActivityCompat.requestPermissions(requireActivity(),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
@@ -219,6 +229,10 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback{
 
     private Location lastKnownLocation;
     private void updateLocationUI() {
+        lastKnownLocation = new Location("curr");
+        lastKnownLocation.setLatitude(defaultLocation.latitude);
+        lastKnownLocation.setLongitude(defaultLocation.longitude);
+
         if (mMap == null) {
             return;
         }
@@ -229,7 +243,6 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback{
             } else {
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                lastKnownLocation = null;
                 getLocationPermission();
             }
         } catch (SecurityException e)  {
@@ -255,21 +268,20 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback{
                             // Set the map's camera position to the current location of the device.
                             lastKnownLocation = task.getResult();
                             if (lastKnownLocation != null) {
-//                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-//                                        new LatLng(lastKnownLocation.getLatitude(),
-//                                                lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                        new LatLng(defaultLocation.latitude,
-                                                defaultLocation.longitude), DEFAULT_ZOOM));
+                                        new LatLng(lastKnownLocation.getLatitude(),
+                                                lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+//                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+//                                        new LatLng(defaultLocation.latitude,
+//                                                defaultLocation.longitude), DEFAULT_ZOOM));
                             }
 
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
                             mMap.moveCamera(CameraUpdateFactory
-                                    .newLatLngZoom(defaultLocation, DEFAULT_ZOOM));
-                            lastKnownLocation.setLatitude(defaultLocation.latitude);
-                            lastKnownLocation.setLongitude(defaultLocation.longitude);
+                                    .newLatLngZoom(new LatLng(lastKnownLocation.getLatitude(),
+                                            lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                         showAllMarker();
