@@ -5,6 +5,8 @@
       <map>
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/activity_main.xml" value="0.2663755458515284" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/activity_maps.xml" value="0.16510416666666666" />
+        <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/anchor_item.xml" value="0.16510416666666666" />
+        <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/cloud_anchor.xml" value="0.16510416666666666" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/fragment_dashboard.xml" value="0.14322916666666666" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/fragment_discover.xml" value="0.16510416666666666" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/fragment_discover_lobby.xml" value="0.13958333333333334" />
@@ -13,6 +15,9 @@
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/fragment_home.xml" value="0.14322916666666666" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/fragment_notifications.xml" value="0.10625" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/layout.xml" value="0.1" />
+        <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/resolve_anchors_lobby.xml" value="0.16510416666666666" />
+        <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/resolve_dialog.xml" value="0.16510416666666666" />
+        <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/save_anchor_dialog.xml" value="0.16510416666666666" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/menu/bottom_nav_menu.xml" value="0.14322916666666666" />
       </map>
     </option>

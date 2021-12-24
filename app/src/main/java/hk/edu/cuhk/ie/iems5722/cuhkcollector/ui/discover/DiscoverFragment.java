@@ -1,5 +1,6 @@
 package hk.edu.cuhk.ie.iems5722.cuhkcollector.ui.discover;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +13,20 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.button.MaterialButton;
+
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.R;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.common.helpers.DisplayRotationHelper;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.databinding.FragmentDiscoverBinding;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.persistentcloudanchor.CloudAnchorActivity;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.persistentcloudanchor.ResolveAnchorsLobbyActivity;
 
 public class DiscoverFragment extends Fragment {
 
     private DiscoverViewModel discoverViewModel;
     private FragmentDiscoverBinding binding;
+    private DisplayRotationHelper displayRotationHelper;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -34,6 +43,13 @@ public class DiscoverFragment extends Fragment {
 //                textView.setText(s);
 //            }
 //        });
+
+        displayRotationHelper = new DisplayRotationHelper(getActivity());
+        MaterialButton hostButton = binding.hostButton;
+        hostButton.setOnClickListener((view) -> onHostButtonPress());
+        MaterialButton resolveButton = binding.beginResolveButton;
+        resolveButton.setOnClickListener((view) -> onResolveButtonPress());
+
         return root;
     }
 
@@ -42,4 +58,31 @@ public class DiscoverFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        displayRotationHelper.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        displayRotationHelper.onPause();
+    }
+
+    private void onHostButtonPress() {
+        Intent intent = CloudAnchorActivity.newHostingIntent(this.getActivity());
+
+
+
+        startActivity(intent);
+    }
+
+    /** Callback function invoked when the Resolve Button is pressed. */
+    private void onResolveButtonPress() {
+        Intent intent = ResolveAnchorsLobbyActivity.newIntent(this.getActivity());
+        startActivity(intent);
+    }
+
 }
