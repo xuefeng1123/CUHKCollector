@@ -18,6 +18,7 @@ package hk.edu.cuhk.ie.iems5722.cuhkcollector.persistentcloudanchor;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -37,6 +38,7 @@ public class ResolveAnchorsLobbyActivity extends AppCompatActivity {
   private Spinner spinner;
   private SharedPreferences sharedPreferences;
   List<AnchorItem> selectedAnchors;
+//  private MyBroadcastReceiver myBroadcastReceiver;
 
   public static List<AnchorItem> retrieveStoredAnchors(SharedPreferences anchorPreferences) {
     List<AnchorItem> anchors = new ArrayList<>();
@@ -88,6 +90,10 @@ public class ResolveAnchorsLobbyActivity extends AppCompatActivity {
     displayRotationHelper.onResume();
   }
 
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+  }
   @Override
   public void onPause() {
     super.onPause();

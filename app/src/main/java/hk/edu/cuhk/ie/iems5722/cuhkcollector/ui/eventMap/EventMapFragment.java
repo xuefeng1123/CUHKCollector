@@ -1,6 +1,9 @@
 package hk.edu.cuhk.ie.iems5722.cuhkcollector.ui.eventMap;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -47,6 +50,7 @@ import hk.edu.cuhk.ie.iems5722.cuhkcollector.R;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.Service.CloudAnchorService;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.databinding.FragmentEventMapBinding;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.network.Client;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.persistentcloudanchor.CloudAnchorActivity;
 
 public class EventMapFragment extends Fragment implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -66,6 +70,7 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Ac
 
     static public Location lastKnownLocation;
 
+    private MyBroadcastReceiver myBroadcastReceiver;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         eventMapViewModel =
@@ -208,9 +213,18 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Ac
         });
 
         Client.getEventRequest(getActivity());
+
+        //注册广播接收
+        myBroadcastReceiver = new MyBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(String.valueOf(R.string.position_changed_broadcast));
+        getActivity().registerReceiver(myBroadcastReceiver, filter);
+
         //启动定时服务,检测与事件锚点的距离
         getActivity().startService(new Intent(getContext(), CloudAnchorService.class));
+
     }
+
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean locationPermissionGranted;
@@ -312,5 +326,16 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Ac
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage(), e);
         }
+    }
+}
+
+class MyBroadcastReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        MainActivity activity = ((MainActivity) context);
+//        Client.getEventRequest(activity);
+//        Toast.makeText(context, "received in MyBroadcastReceiver", Toast.LENGTH_SHORT).show();
+//        System.out.println("received in MyBroadcastReceiver");
     }
 }

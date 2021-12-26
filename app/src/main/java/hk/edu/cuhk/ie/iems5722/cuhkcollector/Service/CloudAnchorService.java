@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.Marker;
 
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.Entity.MyEvent;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.R;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.network.Client;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.ui.eventMap.EventMapFragment;
 
 public class CloudAnchorService extends Service {
@@ -102,16 +105,26 @@ public class CloudAnchorService extends Service {
 //            sampleAnchorId = "";
 //        }
         Location currLocation = EventMapFragment.lastKnownLocation;
+
         loadAnchorIds.clear();
         for (MyEvent event : EventMapFragment.events) {
             Location eventLocation = new Location("location");
             eventLocation.setLatitude(event.latitude);
             eventLocation.setLongitude(event.longitude);
+           System.out.println("The distance: " + currLocation.distanceTo(eventLocation) + "\n");
+            Toast.makeText(getApplicationContext(), "The distance: " + currLocation.distanceTo(eventLocation), Toast.LENGTH_SHORT).show();
             if(currLocation.distanceTo(eventLocation) < 50){
                 if(event.myAnchor != null)
                     loadAnchorIds.add(event.myAnchor.id);
             }
         }
+        //向AnchorActivity发送广播
+        Intent intent = new Intent();
+        intent.setAction(String.valueOf(R.string.position_changed_broadcast));
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        sendBroadcast(intent);
+        System.out.println("Update Anchors!!");
+
     }
 
 }

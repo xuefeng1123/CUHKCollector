@@ -16,8 +16,10 @@
 
 package hk.edu.cuhk.ie.iems5722.cuhkcollector.persistentcloudanchor;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
@@ -50,6 +52,7 @@ import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
 
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.R;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.Service.CloudAnchorService;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.common.helpers.CameraPermissionHelper;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.common.helpers.DisplayRotationHelper;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.common.helpers.FullScreenHelper;
@@ -71,6 +74,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -163,8 +168,9 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
   @GuardedBy("anchorLock")
   private List<String> unresolvedAnchorIds = new ArrayList<>();
 
-  private CloudAnchorManager cloudAnchorManager;
-  private HostResolveMode currentMode;
+  public CloudAnchorManager cloudAnchorManager;
+  private MyBroadcastReceiver myBroadcastReceiver;
+  public HostResolveMode currentMode;
 
   private static void saveAnchorToStorage(
       String anchorId, String anchorNickname, SharedPreferences anchorPreferences) {
@@ -213,6 +219,11 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
       currentMode = HostResolveMode.RESOLVING;
     }
     showPrivacyDialog();
+    //注册广播接收
+    myBroadcastReceiver = new MyBroadcastReceiver();
+    IntentFilter filter = new IntentFilter();
+    filter.addAction(String.valueOf(R.string.position_changed_broadcast));
+    registerReceiver(myBroadcastReceiver, filter);
   }
 
   private void setUpTapListener() {
@@ -266,7 +277,7 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
       session.close();
       session = null;
     }
-
+    unregisterReceiver(myBroadcastReceiver);
     super.onDestroy();
   }
 
@@ -669,7 +680,7 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
   }
 
   /* Listens for a resolved anchor. */
-  private final class ResolveListener implements CloudAnchorManager.CloudAnchorListener {
+  public final class ResolveListener implements CloudAnchorManager.CloudAnchorListener {
 
     @Override
     public void onComplete(Anchor anchor) {
@@ -762,5 +773,30 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
   public void showNoticeDialog(HostResolveListener listener) {
     DialogFragment dialog = PrivacyNoticeDialogFragment.createDialog(listener);
     dialog.show(getSupportFragmentManager(), PrivacyNoticeDialogFragment.class.getName());
+  }
+
+  public void updateAnchor(List<String> newAnchorIds){
+    resolvedAnchors.removeIf(anchor -> newAnchorIds.stream()
+            .noneMatch(id -> id.equals(anchor.getCloudAnchorId())));
+    List<String> addAnchor = newAnchorIds.stream()
+            .filter(anchorId -> resolvedAnchors.stream()
+                    .noneMatch(anchor -> anchor.getCloudAnchorId().equals(anchorId)))
+            .collect(Collectors.toList());
+    unresolvedAnchorIds.addAll(addAnchor);
+    ResolveListener resolveListener = new ResolveListener();
+    for (String cloudAnchorId : unresolvedAnchorIds) {
+      cloudAnchorManager.resolveCloudAnchor(cloudAnchorId, resolveListener);
+    }
+  }
+
+}
+ class MyBroadcastReceiver extends BroadcastReceiver {
+
+  @Override
+  public void onReceive(Context context, Intent intent) {
+    CloudAnchorActivity activity =((CloudAnchorActivity)context);
+    activity.updateAnchor(CloudAnchorService.loadAnchorIds);
+    Toast.makeText(context, "received in MyBroadcastReceiver", Toast.LENGTH_SHORT).show();
+    System.out.println("received in MyBroadcastReceiver");
   }
 }
