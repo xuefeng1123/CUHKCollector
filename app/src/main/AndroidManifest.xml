@@ -21,6 +21,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.CUHKCollector">
         <service
             android:name=".Service.CloudAnchorService"
@@ -70,6 +71,7 @@
             android:theme="@style/AppTheme">
         </activity>
         <meta-data android:name="com.google.ar.core" android:value="required" />
+
     </application>
 
 </manifest>

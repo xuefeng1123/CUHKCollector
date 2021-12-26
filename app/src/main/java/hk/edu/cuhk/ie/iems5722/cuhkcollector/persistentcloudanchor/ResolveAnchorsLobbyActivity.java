@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.R;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.Service.CloudAnchorService;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.common.helpers.DisplayRotationHelper;
 
 /** Lobby activity for resolving anchors in the Persistent Cloud Anchor Sample. */
@@ -93,23 +94,35 @@ public class ResolveAnchorsLobbyActivity extends AppCompatActivity {
     displayRotationHelper.onPause();
   }
 
+//  /** Callback function invoked when the Resolve Button is pressed. */
+//  private void onResolveButtonPress() {
+//    ArrayList<String> anchorsToResolve = new ArrayList<>();
+//    for (AnchorItem anchorItem : selectedAnchors) {
+//      if (anchorItem.isSelected()) {
+//        anchorsToResolve.add(anchorItem.getAnchorId());
+//      }
+//    }
+//    EditText enteredAnchorIds = (EditText) findViewById(R.id.anchor_edit_text);
+//    String[] idsList = enteredAnchorIds.getText().toString().trim().split(",", -1);
+//    for (String anchorId : idsList) {
+//      if (anchorId.isEmpty()) {
+//        continue;
+//      }
+//      anchorsToResolve.add(anchorId);
+//    }
+//    Intent intent = CloudAnchorActivity.newResolvingIntent(this, anchorsToResolve);
+//    startActivity(intent);
+//  }
+
   /** Callback function invoked when the Resolve Button is pressed. */
   private void onResolveButtonPress() {
     ArrayList<String> anchorsToResolve = new ArrayList<>();
-    for (AnchorItem anchorItem : selectedAnchors) {
-      if (anchorItem.isSelected()) {
-        anchorsToResolve.add(anchorItem.getAnchorId());
-      }
+    if(CloudAnchorService.sampleAnchorId.length() > 1){
+      anchorsToResolve.add(CloudAnchorService.sampleAnchorId);
+      Intent intent = CloudAnchorActivity.newResolvingIntent(this, anchorsToResolve);
+      startActivity(intent);
     }
-    EditText enteredAnchorIds = (EditText) findViewById(R.id.anchor_edit_text);
-    String[] idsList = enteredAnchorIds.getText().toString().trim().split(",", -1);
-    for (String anchorId : idsList) {
-      if (anchorId.isEmpty()) {
-        continue;
-      }
-      anchorsToResolve.add(anchorId);
-    }
-    Intent intent = CloudAnchorActivity.newResolvingIntent(this, anchorsToResolve);
-    startActivity(intent);
   }
+
+
 }

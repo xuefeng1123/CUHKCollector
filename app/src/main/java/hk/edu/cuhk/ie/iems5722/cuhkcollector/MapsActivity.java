@@ -28,7 +28,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import java.util.ArrayList;
 import java.util.List;
 
-import hk.edu.cuhk.ie.iems5722.cuhkcollector.Entity.MyMarker;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.Entity.MyEvent;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.databinding.ActivityMapsBinding;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -63,21 +63,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void showAllMarker(){
-        MyMarker m1 = new MyMarker(22.4135636,114.2092091,20, "大学站", "地铁站");
-        MyMarker m2 = new MyMarker(22.4180471,114.206987,140, "何善衡工程学大楼","教学楼");
-        MyMarker m3 = new MyMarker(22.4231945,114.2007411,300, "逸夫书院", "教学楼，住宿区");
+        MyEvent m1 = new MyEvent(22.4135636,114.2092091,20, "大学站", "地铁站");
+        MyEvent m2 = new MyEvent(22.4180471,114.206987,140, "何善衡工程学大楼","教学楼");
+        MyEvent m3 = new MyEvent(22.4231945,114.2007411,300, "逸夫书院", "教学楼，住宿区");
 
-        List<MyMarker> myMarkers = new ArrayList<>();
-        myMarkers.add(m1);
-        myMarkers.add(m2);
-        myMarkers.add(m3);
+        List<MyEvent> myEvents = new ArrayList<>();
+        myEvents.add(m1);
+        myEvents.add(m2);
+        myEvents.add(m3);
 
-        myMarkers.forEach(myMarker -> {
+        myEvents.forEach(myEvent -> {
             Marker marker = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(myMarker.latitude, myMarker.longitude))
-                    .title(myMarker.title)
-                    .snippet(myMarker.snippet)
-                    .icon(BitmapDescriptorFactory.defaultMarker(myMarker.colorIndex)));
+                    .position(new LatLng(myEvent.latitude, myEvent.longitude))
+                    .title(myEvent.title)
+                    .snippet(myEvent.snippet)
+                    .icon(BitmapDescriptorFactory.defaultMarker(myEvent.colorIndex)));
             markers.add(marker);
         });
 

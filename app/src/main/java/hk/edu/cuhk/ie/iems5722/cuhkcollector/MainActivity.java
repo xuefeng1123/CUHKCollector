@@ -10,6 +10,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import java.util.List;
+
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.Entity.MyEvent;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity{
@@ -33,5 +36,4 @@ public class MainActivity extends AppCompatActivity{
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
-
 }

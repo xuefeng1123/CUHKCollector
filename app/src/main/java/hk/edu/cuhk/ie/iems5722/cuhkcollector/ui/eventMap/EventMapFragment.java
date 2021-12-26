@@ -1,8 +1,5 @@
 package hk.edu.cuhk.ie.iems5722.cuhkcollector.ui.eventMap;
 
-import static hk.edu.cuhk.ie.iems5722.cuhkcollector.Service.CloudAnchorService.TEST_ACTION;
-
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -20,9 +17,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.NavHost;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -46,27 +40,28 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import java.util.ArrayList;
 import java.util.List;
 
-import hk.edu.cuhk.ie.iems5722.cuhkcollector.Entity.MyMarker;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.Entity.MyEvent;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.MainActivity;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.MapsActivity;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.R;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.Service.CloudAnchorService;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.databinding.FragmentEventMapBinding;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.network.Client;
 
 public class EventMapFragment extends Fragment implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private EventMapViewModel eventMapViewModel;
-    private FragmentEventMapBinding binding;
+    public FragmentEventMapBinding binding;
 
-    private NavController navController;
-    private GoogleMap mMap;
-    private MapView mMapView;
+    public NavController navController;
+    static public GoogleMap mMap;
+    public MapView mMapView;
     // The entry point to the Places API.
     private PlacesClient placesClient;
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-    static public List<Marker> markers;
+    public List<Marker> markers;
 
     static public Location lastKnownLocation;
 
@@ -132,26 +127,41 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Ac
     }
 
 
-    private void showAllMarker() {
-        MyMarker m1 = new MyMarker(22.4135636, 114.2092091, 20, "大学站", "地铁站");
-        MyMarker m2 = new MyMarker(22.4180471, 114.206987, 140, "何善衡工程学大楼", "教学楼");
-        MyMarker m3 = new MyMarker(22.4231945, 114.2007411, 300, "逸夫书院", "教学楼，住宿区");
+    public void showAllMarker() {
+        MyEvent m1 = new MyEvent(22.4135636, 114.2092091, 20, "大学站", "地铁站");
+        MyEvent m2 = new MyEvent(22.4180471, 114.206987, 140, "何善衡工程学大楼", "教学楼");
+        MyEvent m3 = new MyEvent(22.4231945, 114.2007411, 300, "逸夫书院", "教学楼，住宿区");
 
-        List<MyMarker> myMarkers = new ArrayList<>();
-        myMarkers.add(m1);
-        myMarkers.add(m2);
-        myMarkers.add(m3);
+        List<MyEvent> myEvents = new ArrayList<>();
+        myEvents.add(m1);
+        myEvents.add(m2);
+        myEvents.add(m3);
 
-        myMarkers.forEach(myMarker -> {
+        myEvents.forEach(myEvent -> {
             Marker marker = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(myMarker.latitude, myMarker.longitude))
-                    .title(myMarker.title)
-                    .snippet(myMarker.snippet)
-                    .icon(BitmapDescriptorFactory.defaultMarker(myMarker.colorIndex)));
+                    .position(new LatLng(myEvent.latitude, myEvent.longitude))
+                    .title(myEvent.title)
+                    .snippet(myEvent.snippet)
+                    .icon(BitmapDescriptorFactory.defaultMarker(myEvent.colorIndex)));
             markers.add(marker);
         });
 
 
+    }
+
+    public void updateEventMarker(List<MyEvent> events){
+        //先清除地图上现有的标记
+        markers.forEach(Marker::remove);
+        markers.clear();
+        //添加更新的标记
+        events.forEach(event ->{
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(event.latitude, event.longitude))
+                    .title(event.title)
+                    .snippet(event.snippet)
+                    .icon(BitmapDescriptorFactory.defaultMarker(event.colorIndex)));
+            markers.add(marker);
+        });
     }
 
     /**
@@ -193,6 +203,7 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Ac
             }
         });
 
+        Client.getEventRequest(getActivity());
         //启动定时服务,检测与事件锚点的距离
         getActivity().startService(new Intent(getContext(), CloudAnchorService.class));
     }
@@ -216,6 +227,7 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Ac
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
+
     }
 
     @Override

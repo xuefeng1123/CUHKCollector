@@ -78,19 +78,26 @@ public class CloudAnchorService extends Service {
 
     public Location farLocation = new Location("farLocation");
     public Location nearLocation = new Location("nearLocation");
-
+    static public String sampleAnchorId = "";
     private void testAnchorDistance(){
         farLocation.setLatitude(22.4181151);
         farLocation.setLongitude(114.207305);
-        nearLocation.setLatitude(22.417871714353005);
-        nearLocation.setLongitude(114.20731210099227);
+//        nearLocation.setLatitude(22.417871714353005);
+//        nearLocation.setLongitude(114.20731210099227);
 
+        nearLocation.setLatitude(22.320196833494975);
+        nearLocation.setLongitude(114.16515868949841);
         Location currLocation = EventMapFragment.lastKnownLocation;
 
         //以米为单位
         System.out.println("The far distance: " + currLocation.distanceTo(farLocation) + "\n");//27.26321
         System.out.println("The near distance: " + currLocation.distanceTo(nearLocation) + "\n");//0.7664323
 
+        if(currLocation.distanceTo(farLocation) < 100){
+            sampleAnchorId = "ua-b0ccb8bad0bdf8e8342ae50411263ecd";
+        }else{
+            sampleAnchorId = "";
+        }
     }
 
 }
