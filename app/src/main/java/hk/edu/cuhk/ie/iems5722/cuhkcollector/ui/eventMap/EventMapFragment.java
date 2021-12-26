@@ -62,6 +62,7 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Ac
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     public List<Marker> markers;
+    static public List<MyEvent> events;
 
     static public Location lastKnownLocation;
 
@@ -80,6 +81,7 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Ac
 
         //初始化两个静态变量
         markers = new ArrayList<>();
+        events = new ArrayList<>();
         lastKnownLocation = new Location("curr");
         lastKnownLocation.setLatitude(defaultLocation.latitude);
         lastKnownLocation.setLongitude(defaultLocation.longitude);
@@ -151,6 +153,8 @@ public class EventMapFragment extends Fragment implements OnMapReadyCallback, Ac
 
     public void updateEventMarker(List<MyEvent> events){
         //先清除地图上现有的标记
+        this.events.clear();
+        this.events.addAll(events);
         markers.forEach(Marker::remove);
         markers.clear();
         //添加更新的标记

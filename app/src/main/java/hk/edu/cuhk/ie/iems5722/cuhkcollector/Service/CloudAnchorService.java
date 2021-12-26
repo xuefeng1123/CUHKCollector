@@ -14,8 +14,10 @@ import android.os.SystemClock;
 
 import com.google.android.gms.maps.model.Marker;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.Entity.MyEvent;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.ui.eventMap.EventMapFragment;
 
 public class CloudAnchorService extends Service {
@@ -43,7 +45,7 @@ public class CloudAnchorService extends Service {
         Intent intent = new Intent();
         intent.setAction(TEST_ACTION);
         pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-
+        loadAnchorIds = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//6.0低电量模式需要使用该方法触发定时任务
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {//4.4以上 需要使用该方法精确执行时间
@@ -79,24 +81,36 @@ public class CloudAnchorService extends Service {
     public Location farLocation = new Location("farLocation");
     public Location nearLocation = new Location("nearLocation");
     static public String sampleAnchorId = "";
+    static public List<String> loadAnchorIds;
     private void testAnchorDistance(){
-        farLocation.setLatitude(22.4181151);
-        farLocation.setLongitude(114.207305);
-//        nearLocation.setLatitude(22.417871714353005);
-//        nearLocation.setLongitude(114.20731210099227);
-
-        nearLocation.setLatitude(22.320196833494975);
-        nearLocation.setLongitude(114.16515868949841);
+//        farLocation.setLatitude(22.4181151);
+//        farLocation.setLongitude(114.207305);
+////        nearLocation.setLatitude(22.417871714353005);
+////        nearLocation.setLongitude(114.20731210099227);
+//
+//        nearLocation.setLatitude(22.320196833494975);
+//        nearLocation.setLongitude(114.16515868949841);
+//        Location currLocation = EventMapFragment.lastKnownLocation;
+//
+//        //以米为单位
+//        System.out.println("The far distance: " + currLocation.distanceTo(farLocation) + "\n");//27.26321
+//        System.out.println("The near distance: " + currLocation.distanceTo(nearLocation) + "\n");//0.7664323
+//
+//        if(currLocation.distanceTo(farLocation) < 100){
+//            sampleAnchorId = "ua-b0ccb8bad0bdf8e8342ae50411263ecd";
+//        }else{
+//            sampleAnchorId = "";
+//        }
         Location currLocation = EventMapFragment.lastKnownLocation;
-
-        //以米为单位
-        System.out.println("The far distance: " + currLocation.distanceTo(farLocation) + "\n");//27.26321
-        System.out.println("The near distance: " + currLocation.distanceTo(nearLocation) + "\n");//0.7664323
-
-        if(currLocation.distanceTo(farLocation) < 100){
-            sampleAnchorId = "ua-b0ccb8bad0bdf8e8342ae50411263ecd";
-        }else{
-            sampleAnchorId = "";
+        loadAnchorIds.clear();
+        for (MyEvent event : EventMapFragment.events) {
+            Location eventLocation = new Location("location");
+            eventLocation.setLatitude(event.latitude);
+            eventLocation.setLongitude(event.longitude);
+            if(currLocation.distanceTo(eventLocation) < 50){
+                if(event.myAnchor != null)
+                    loadAnchorIds.add(event.myAnchor.id);
+            }
         }
     }
 

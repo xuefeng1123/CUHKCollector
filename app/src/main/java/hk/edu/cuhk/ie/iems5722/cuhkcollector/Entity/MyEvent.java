@@ -22,6 +22,9 @@ public class MyEvent {
     @JSONField(name = "mapEventDetail")
     public MapEventDetail mapEventDetail;
 
+    @JSONField(name = "anchor")
+    public MyAnchor myAnchor;
+
     public MyEvent(double latitude, double longitude, int colorIndex, String title, String snippet){
         this.latitude = latitude;
         this.longitude = longitude;
