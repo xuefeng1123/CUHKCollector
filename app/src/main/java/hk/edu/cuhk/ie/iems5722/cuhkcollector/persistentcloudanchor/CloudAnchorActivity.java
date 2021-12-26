@@ -58,6 +58,7 @@ import hk.edu.cuhk.ie.iems5722.cuhkcollector.common.rendering.BackgroundRenderer
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.common.rendering.ObjectRenderer;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.common.rendering.PlaneRenderer;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.common.rendering.PointCloudRenderer;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.network.Client;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.persistentcloudanchor.PrivacyNoticeDialogFragment.HostResolveListener;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.ui.discover.DiscoverFragment;
 
@@ -176,6 +177,7 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
     anchorPreferences.edit().putString(HOSTED_ANCHOR_IDS, hostedAnchorIds).apply();
     anchorPreferences.edit().putString(HOSTED_ANCHOR_NAMES, hostedAnchorNames).apply();
     anchorPreferences.edit().putString(HOSTED_ANCHOR_MINUTES, hostedAnchorMinutes).apply();
+
   }
 
   private static int getNumStoredAnchors(SharedPreferences anchorPreferences) {
@@ -726,6 +728,12 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
     /** Callback function invoked when the user presses the OK button in the Save Anchor Dialog. */
     private void onAnchorNameEntered(String anchorNickname) {
       saveAnchorToStorage(cloudAnchorId, anchorNickname, sharedPreferences);
+
+      try{
+        Client.saveMapEvents(anchorNickname, cloudAnchorId);
+      }catch (Exception e){
+        System.out.println(e.toString());
+      }
       userMessageText.setVisibility(View.GONE);
       debugText.setText(getString(R.string.debug_hosting_success, cloudAnchorId));
       Intent sendIntent = new Intent();

@@ -14,6 +14,7 @@ import java.util.List;
 
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.Entity.MyEvent;
 import hk.edu.cuhk.ie.iems5722.cuhkcollector.databinding.ActivityMainBinding;
+import hk.edu.cuhk.ie.iems5722.cuhkcollector.network.Client;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -35,5 +36,6 @@ public class MainActivity extends AppCompatActivity{
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
     }
 }

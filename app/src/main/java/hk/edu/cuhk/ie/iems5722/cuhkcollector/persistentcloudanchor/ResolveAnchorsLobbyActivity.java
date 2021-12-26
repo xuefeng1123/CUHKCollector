@@ -94,35 +94,35 @@ public class ResolveAnchorsLobbyActivity extends AppCompatActivity {
     displayRotationHelper.onPause();
   }
 
-//  /** Callback function invoked when the Resolve Button is pressed. */
-//  private void onResolveButtonPress() {
-//    ArrayList<String> anchorsToResolve = new ArrayList<>();
-//    for (AnchorItem anchorItem : selectedAnchors) {
-//      if (anchorItem.isSelected()) {
-//        anchorsToResolve.add(anchorItem.getAnchorId());
-//      }
-//    }
-//    EditText enteredAnchorIds = (EditText) findViewById(R.id.anchor_edit_text);
-//    String[] idsList = enteredAnchorIds.getText().toString().trim().split(",", -1);
-//    for (String anchorId : idsList) {
-//      if (anchorId.isEmpty()) {
-//        continue;
-//      }
-//      anchorsToResolve.add(anchorId);
-//    }
-//    Intent intent = CloudAnchorActivity.newResolvingIntent(this, anchorsToResolve);
-//    startActivity(intent);
-//  }
-
   /** Callback function invoked when the Resolve Button is pressed. */
   private void onResolveButtonPress() {
     ArrayList<String> anchorsToResolve = new ArrayList<>();
-    if(CloudAnchorService.sampleAnchorId.length() > 1){
-      anchorsToResolve.add(CloudAnchorService.sampleAnchorId);
-      Intent intent = CloudAnchorActivity.newResolvingIntent(this, anchorsToResolve);
-      startActivity(intent);
+    for (AnchorItem anchorItem : selectedAnchors) {
+      if (anchorItem.isSelected()) {
+        anchorsToResolve.add(anchorItem.getAnchorId());
+      }
     }
+    EditText enteredAnchorIds = (EditText) findViewById(R.id.anchor_edit_text);
+    String[] idsList = enteredAnchorIds.getText().toString().trim().split(",", -1);
+    for (String anchorId : idsList) {
+      if (anchorId.isEmpty()) {
+        continue;
+      }
+      anchorsToResolve.add(anchorId);
+    }
+    Intent intent = CloudAnchorActivity.newResolvingIntent(this, anchorsToResolve);
+    startActivity(intent);
   }
+
+  /** Callback function invoked when the Resolve Button is pressed. */
+//  private void onResolveButtonPress() {
+//    ArrayList<String> anchorsToResolve = new ArrayList<>();
+//    if(CloudAnchorService.sampleAnchorId.length() > 1){
+//      anchorsToResolve.add(CloudAnchorService.sampleAnchorId);
+//      Intent intent = CloudAnchorActivity.newResolvingIntent(this, anchorsToResolve);
+//      startActivity(intent);
+//    }
+//  }
 
 
 }
