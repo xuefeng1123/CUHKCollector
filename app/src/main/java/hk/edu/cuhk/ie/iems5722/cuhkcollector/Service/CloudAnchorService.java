@@ -112,7 +112,7 @@ public class CloudAnchorService extends Service {
             eventLocation.setLatitude(event.latitude);
             eventLocation.setLongitude(event.longitude);
            System.out.println("The distance: " + currLocation.distanceTo(eventLocation) + "\n");
-            Toast.makeText(getApplicationContext(), "The distance: " + currLocation.distanceTo(eventLocation), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "The distance: " + currLocation.distanceTo(eventLocation), Toast.LENGTH_SHORT).show();
             if(currLocation.distanceTo(eventLocation) < 50){
                 if(event.myAnchor != null)
                     loadAnchorIds.add(event.myAnchor.id);

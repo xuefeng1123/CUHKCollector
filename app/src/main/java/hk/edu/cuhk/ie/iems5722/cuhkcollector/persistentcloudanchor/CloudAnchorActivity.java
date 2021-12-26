@@ -440,6 +440,8 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
     return false;
   }
 
+  static public String modelName = "anchor";
+
   @Override
   public void onSurfaceCreated(GL10 gl, EGLConfig config) {
     GLES20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -451,7 +453,8 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
       planeRenderer.createOnGlThread(this, "models/trigrid.png");
       pointCloudRenderer.createOnGlThread(this);
 
-      anchorObject.createOnGlThread(this, "models/anchor.obj", "models/anchor.png");
+//      anchorObject.createOnGlThread(this, "models/anchor.obj", "models/anchor.png");
+      anchorObject.createOnGlThread(this, "models/" + modelName + ".obj", "models/" + modelName + ".png");
       anchorObject.setMaterialProperties(0.0f, 0.75f, 0.1f, 0.5f);
 
       featureMapQualityBarObject.createOnGlThread(
@@ -796,7 +799,7 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
   public void onReceive(Context context, Intent intent) {
     CloudAnchorActivity activity =((CloudAnchorActivity)context);
     activity.updateAnchor(CloudAnchorService.loadAnchorIds);
-    Toast.makeText(context, "received in MyBroadcastReceiver", Toast.LENGTH_SHORT).show();
+//    Toast.makeText(context, "received in MyBroadcastReceiver", Toast.LENGTH_SHORT).show();
     System.out.println("received in MyBroadcastReceiver");
   }
 }

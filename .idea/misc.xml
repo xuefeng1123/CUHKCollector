@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/drawable/latte.xml" value="0.1037037037037037" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/activity_main.xml" value="0.2663755458515284" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/activity_maps.xml" value="0.16510416666666666" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/anchor_item.xml" value="0.16510416666666666" />
@@ -13,8 +14,10 @@
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/fragment_event_detail.xml" value="0.2" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/fragment_event_map.xml" value="0.14322916666666666" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/fragment_home.xml" value="0.14322916666666666" />
+        <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/fragment_model.xml" value="0.1331521739130435" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/fragment_notifications.xml" value="0.10625" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/layout.xml" value="0.1" />
+        <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/model_item.xml" value="0.13903985507246377" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/resolve_anchors_lobby.xml" value="0.16510416666666666" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/resolve_dialog.xml" value="0.16510416666666666" />
         <entry key="..\:/cuhkTerm1/IEMS5722/project/CUHKCollector/app/src/main/res/layout/save_anchor_dialog.xml" value="0.16510416666666666" />
@@ -27,5 +30,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.1331521739130435" />
+      </ProjectState>
+    </option>
   </component>
 </project>
